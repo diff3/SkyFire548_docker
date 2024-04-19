@@ -1,0 +1,41 @@
+version: '3.8'
+
+x-${PROJECT}-shared-conf: &shared-conf
+  environment:
+    - TZ=${TIME_ZONE}
+  env_file:
+      - env/compile.env
+      - env/database.env
+  volumes:
+    - "./sources:/app/sources:rw"
+    - "./server:/app/skyfire-server:rw"
+      #- "${WOW_PATH}:appt/wow:rw"
+  tty: True
+  restart: unless-stopped
+
+services:
+  authserver:
+    image: ${PROJECT}-authserver:${UBUNTU_TAG}
+    container_name: ${PROJECT}-authserver
+    build: {context: ., dockerfile: container/authserver/Dockerfile}
+    <<: *shared-conf
+
+  compile:
+    image: ${PROJECT}-compile:${UBUNTU_TAG}
+    container_name: ${PROJECT}-compile
+    build: {context: ., dockerfile: container/compile/Dockerfile}
+    <<: *shared-conf
+
+  database:
+    image: ${PROJECT}-db:${DB_TAG}
+    container_name: ${PROJECT}-db
+    build: {context: ., dockerfile: container/database/Dockerfile}
+    <<: *shared-conf
+    hostname: ${PROJECT}db
+    command: --max_allowed_packet=32505856
+    ports:
+      - "3333:3306"
+
+networks:
+  default:
+    name: ${PROJECT}-network
