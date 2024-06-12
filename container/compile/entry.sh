@@ -29,9 +29,9 @@ cd /app/sources/SkyFire_548/build
 # cmake .. -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX -DCMAKE_C_COMPILER=$CMAKE_C_COMPILER -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER -DSCRIPTS=$SCRIPTS -DWITH_WARNINGS=$WARNINGS -DTOOLS=$EXTRACTORS -DCMAKE_CXX_FLAGS=$CMAKE_CXX_FLAGS
 
 make clean
-cmake ..  -DCMAKE_INSTALL_PREFIX=/app/skyfire-server -DTOOLS=1 -DCMAKE_C_COMPILER=clang-18 -DCMAKE_CXX_COMPILER=clang++-18 -DSCRIPTS=1  -DWITH_WARNINGS=0 -DCONF_DIR=/app/skyfire-server/etc -DLIBSDIR=/app/skyfire-server/lib
+cmake ../ -DCMAKE_INSTALL_PREFIX=/app/skyfire-server -DTOOLS=1 -DWITH_WARNINGS=0 -DCONF_DIR=/app/skyfire-server/etc -DLIBSDIR=/app/skyfire-server/lib
 
-make -j32
+make -j$(nproc)
 make install
 
 cp -r /usr/local/skyfire-server /app
